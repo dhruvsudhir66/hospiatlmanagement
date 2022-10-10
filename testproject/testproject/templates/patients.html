@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% if patients %}
+<div class="container">
+    <div class="card mt-5 p-5 shadow">
+        <table class="table table-hover text-center">
+            <thead>
+              <tr>
+                <th scope="col">Patient Number</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Age</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Diagnosis</th>
+                <th scope="col">Doctor Assigned</th>
+                <th scope="col">Date</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for patient in patients %}
+              <tr class="table-light">
+                <th scope="row">{{patient.id}}</th>
+                <td>{{patient.first_name}}</td>
+                <td>{{patient.last_name}}</td>
+                <td>{{patient.age}}</td>
+                <td>{{patient.gender}}</td>
+                <td>{{patient.diagnosis}}</td>
+                <td>{{patient.doctor_assigned}}</td>
+                <td>{{patient.diagnosed_on}}</td>
+                <td>
+                    <!-- <a href="{% url 'patient_update' patient.id %}"><i class="bi bi-pencil-square"></i></a> <span><a href="{% url 'delete' patient.id %}"><i class="bi bi-trash-fill"></i></a></span> -->
+                    <a class="btn btn-primary" href="{% url 'patient_update' patient.id %}"><i class="bi bi-pencil-square"></i></a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{patient.id}}">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                </td>
+                <!--evda thodkum-->
+                <div class="modal" id="delete{{patient.id}}" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">
+                          Patient: {{ patient.first_name }} {{ patient.last_name }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"></span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Are you sure you want to delete this Patient?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <form action="{% url 'delete' patient.id %}" method="POST">
+                          {% csrf_token %}
+                          <input type="submit" class="btn btn-primary" value="Delete">
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--evda theeerum-->
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          <a class="btn btn-primary mt-3" href="{% url 'patient_create' %}">Add Patients</a>
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <div class="alert alert-dismissible alert-primary mt-5">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Sorry!</strong> No Records Found .  &nbsp;<a href="{% url 'patient_create' %}" class="alert-link"> Add Patients</a>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

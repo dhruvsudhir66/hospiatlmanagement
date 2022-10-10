@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% if doctors %}
+<div class="container">
+    <div class="card mt-5 p-5 shadow">
+        <table class="table table-hover text-center">
+            <thead>
+              <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Age</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Specialisation</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for doctor in doctors %}
+              <tr class="table-light">
+                <td>{{doctor.first_name}}</td>
+                <td>{{doctor.last_name}}</td>
+                <td>{{doctor.age}}</td>
+                <td>{{doctor.gender}}</td>
+                <td>{{doctor.specialisation}}</td>
+                <td>
+                    <a class="btn btn-primary" href="{% url 'doctor_update' doctor.id %}"><i class="bi bi-pencil-square"></i></a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{doctor.id}}">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                </td>
+                <div class="modal" id="delete{{doctor.id}}" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">
+                          Patient: {{ doctor.first_name }} {{ doctor.last_name }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"></span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Are you sure you want to delete this Doctor?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <form action="{% url 'doc_delete' doctor.id %}" method="POST">
+                          {% csrf_token %}
+                          <input type="submit" class="btn btn-primary" value="Delete">
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          <a class="btn btn-primary mt-3" href="{% url 'doctor_create' %}">Add Doctors</a>
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <div class="alert alert-dismissible alert-primary mt-5">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Sorry!</strong> No Records Found. <a href="{% url 'doctor_create' %}" class="alert-link"> Add Doctors</a>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

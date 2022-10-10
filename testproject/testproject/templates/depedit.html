@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container">
+    <div class="card my-5 shadow p-5">
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}} <br>
+            <input class="btn btn-primary" type="submit" value="Update">
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
